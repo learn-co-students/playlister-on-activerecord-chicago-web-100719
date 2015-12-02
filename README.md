@@ -115,3 +115,5 @@ Write a `db:seed` rake task.
 
 * [Ruby Docs](http://www.ruby-doc.org/) - [OpenStruct](http://www.ruby-doc.org/stdlib-2.1.0/libdoc/ostruct/rdoc/OpenStruct.html)
 * [Rails Guides](http://guides.rubyonrails.org/) - [Active Record Basics](http://guides.rubyonrails.org/association_basics.html)
+
+<a href='https://learn.co/lessons/playlister-on-activerecord' data-visibility='hidden'>View this lesson on Learn.co</a>
