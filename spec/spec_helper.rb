@@ -16,8 +16,9 @@ RSpec.configure do |config|
   config.filter_run :focus
 
   config.before(:suite) do
+    Rake::Task["db:migrate"].invoke()
     DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with(:deletion)
   end
 
   config.around(:each) do |example|
