@@ -38,7 +38,7 @@ It may be useful to go ahead and define your models at this point. You'll need t
 
 ### 2) Migrations
 
-You'll probably get some errors now that are related to the database. This would probably be a good time to write your migrations. Four of the files for these migrations have been created for you in `db/migrations`, but you'll need to add a fifth to make all of the specs pass. Notice that there is a very strong naming convention at play here. In the file `01_create_songs.rb`, there is a migration defined called `CreateSongs`. The filename of the migration, excluding the version number in the first position, `create_songs`, must match up to the migration class defined within the file, `CreateSongs`. If you don't follow this convention, ActiveRecord will throw an error. `separate_words_with_underscores_and_join_them_together_in_a_class_with_capitals` becomes `SeparateWordsWithUnderscoresAndJoinThemTogetherInAClassWithCapitals`.
+You'll probably get some errors now that are related to the database. This would probably be a good time to write your migrations. Four of the files for these migrations have been created for you in `db/migrate`, but you'll need to add a fifth to make all of the specs pass. Notice that there is a very strong naming convention at play here. In the file `01_create_songs.rb`, there is a migration defined called `CreateSongs`. The filename of the migration, excluding the version number in the first position, `create_songs`, must match up to the migration class defined within the file, `CreateSongs`. If you don't follow this convention, ActiveRecord will throw an error. `separate_words_with_underscores_and_join_them_together_in_a_class_with_capitals` becomes `SeparateWordsWithUnderscoresAndJoinThemTogetherInAClassWithCapitals`.
 
 4. Take a look at the Rakefile. There are a few rake tasks that will help us with our migrations. These tasks mimic the rake tasks that Rails gives you for free. There's `rake db:migrate` which takes the migrations you've made and applies them to the database. `rake db:drop` drops the tables in the database.
 
@@ -92,12 +92,19 @@ These foreign keys, in conjunction with the ActiveRecord association macros (`be
 
 ### Some Notes
 
-1. Every time you type `rspec` into your command line, a Rake task will be triggered that will migrate your database. If you'd like to see how this task works, look in the `Rakefile` under the `:migrate` task. It's actually a bit weird to read through, as there's a bit of metaprogramming magic going on.
+1. If you're having issues with your migrations not running or not representing the state of what you think your database should be run:
 
-  Basically, we're first dropping every table in the database, then iterating through the `db/migrations` folder, using the name of every file to form the correct class name for each migration. Then, using `Kernel.const_get()`, we're converting that name into an actual constant that we can call the `.migrate` method on. Don't worry if you don't get all that's going on. For our purposes, we can just take for granted that it's happening for us.
+```
+rm db/playlister-dev.db
+rm db/playlister-test.db
+```
 
-2. The connection to the database has been taken care of for you. Whenever we migrate (or interact with in any way, really) the database, we set an environment variable, called `PLAYLISTER_ENV`. Based on this environment variable, we connect to a test, development, or production database. This is all being taken care of by the code in two files in `lib/support`. Again, no need to fully understand what's going on there. One of the files, `db_registry` makes use of an OpenStruct. If you'd like to learn more, check out the [documentation](http://www.ruby-doc.org/stdlib-2.1.0/libdoc/ostruct/rdoc/OpenStruct.html). You can sort of think of an OpenStruct as a really fancy hash.
+That should clear out your test and development database and force the migrations to run again with:
 
+```
+rake db:migrate SINATRA_ENV=development
+rake db:migrate SINATRA_ENV=test
+```
 
 ## Bonus
 
@@ -110,12 +117,8 @@ Once you've managed to make the test suite pass, write your own tests. Within th
 
 Write a `db:seed` rake task.
 
-
 ## Resources
 
-* [Ruby Docs](http://www.ruby-doc.org/) - [OpenStruct](http://www.ruby-doc.org/stdlib-2.1.0/libdoc/ostruct/rdoc/OpenStruct.html)
 * [Rails Guides](http://guides.rubyonrails.org/) - [Active Record Basics](http://guides.rubyonrails.org/association_basics.html)
-
-<p data-visibility='hidden'>View <a href='https://learn.co/lessons/playlister-on-activerecord' title='Playlister on ActiveRecord'>Playlister on ActiveRecord</a> on Learn.co and start learning to code for free.</p>
 
 <p class='util--hide'>View <a href='https://learn.co/lessons/playlister-on-activerecord'>Playlister On Activerecord</a> on Learn.co and start learning to code for free.</p>
