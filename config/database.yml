@@ -1,0 +1,10 @@
+adapter: 'sqlite3'
+database: 'db/playlister.db'
+
+development:
+  adapter: 'sqlite3'
+  database: 'db/playlister.db'
+
+test:
+  adapter: 'sqlite3'
+  database: 'db/playlister.db'
