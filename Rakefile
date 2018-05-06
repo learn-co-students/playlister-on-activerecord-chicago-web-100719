@@ -1,31 +1,30 @@
-task :environment do
-  ENV["PLAYLISTER_ENV"] ||= "development"
-  require_relative 'config/environment'
-  # require 'logger'
-  # ActiveRecord::Base.logger = Logger.new(STDOUT)
-end
+require_relative 'config/environment.rb'
+require "sinatra/activerecord/rake"
 
 namespace :db do
-  task :migrate => :environment do
-    migrate_db
-    Rake::Task["db:schema"].invoke
+  desc "Migrate the db"
+  task :migrate do
+    connection_details = YAML::load(File.open('config/database.yml'))
+    ActiveRecord::Base.establish_connection(connection_details)
+    ActiveRecord::Migrator.migrate("db/migrate/")
   end
 
-  task :drop => :environment do 
-    drop_db
+  desc "drop and recreate the db"
+  task :reset => [:drop, :migrate]
+
+  desc "drop the db"
+  task :drop do
+    connection_details = YAML::load(File.open('config/database.yml'))
+    File.delete(connection_details.fetch('database')) if File.exist?(connection_details.fetch('database'))
   end
-  
-  desc 'Create a db/schema.rb file that is portable against any DB supported by AR'
-  task :schema do
-    require 'active_record/schema_dumper'
-    filename = "db/schema.rb"
-    File.open(filename, "w:utf-8") do |file|
-      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
-    end
+
+  desc "start console"
+  task :console do
+    Pry.start
   end
-  
 end
 
-task :console => :environment do
+
+task :console do
   Pry.start
 end
